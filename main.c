@@ -60,15 +60,17 @@ int spaceCnt(char* sentence)
 
 int wordsCnt(char* sentence)
 {
-    int  cnt = *sentence != ' ' && *sentence != '\0';
+    int cnt = *sentence != ' ' && *sentence != '\0';
 
-    while (*sentence++ != '\0')
+
+    for(int i = 0; sentence[i] != '\0'; i++)
     {
-        if(spaceCnt(sentence) != 0)
+        int spaceLen = spaceCnt(&sentence[i]);
+        i += spaceLen;
+        if( spaceLen != 0)
         {
             cnt++;
         }
-        sentence += spaceCnt(sentence);
     }
     return cnt;
 }
