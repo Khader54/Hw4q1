@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
-#define MAX_STRING_LEN 1024
 
+#define MAX_STRING_LEN 1024
 
 bool read_line(char *line, int length)
 {
@@ -21,6 +22,7 @@ bool read_line(char *line, int length)
     }
     return false;
 }
+
 bool string_copy(char *target, int length, char *src)
 {
     for (int i = 0; i < length; i++)
@@ -33,8 +35,6 @@ bool string_copy(char *target, int length, char *src)
     }
     return false;
 }
-
-
 
 int letCnt(char* sentence)
 {
@@ -50,12 +50,13 @@ int letCnt(char* sentence)
 int spaceCnt(char* sentence)
 {
     int cnt = 0;
-    while(*(sentence++) == ' ')// b
+    while(sentence[cnt] == ' ')
     {
         cnt++;
     }
     return cnt;
 }
+
 int wordsCnt(char* sentence)
 {
     int  cnt = *sentence != ' ';
@@ -71,25 +72,22 @@ int wordsCnt(char* sentence)
     return cnt;
 }
 
-
 int vowelCnt(char* sentence)
 {
     int cnt = 0;
-    while (*sentence++ != '\0')
+    for (int i = 0; sentence[i] != '\0'; ++i)
     {
-        if( *sentence == 'a' || *sentence == 'A' || *sentence == 'e'
-            || *sentence == 'E' ||
-            *sentence == 'i' || *sentence == 'I' || *sentence == 'o'
-            || *sentence == 'O' ||
-            *sentence == 'u' || *sentence == 'U')
+        if (sentence[i] == 'a' || sentence[i] == 'A' || sentence[i] == 'e'
+            || sentence[i] == 'E' || sentence[i] == 'i' || sentence[i] == 'I'
+            || sentence[i] == 'o' || sentence[i] == 'O' || sentence[i] == 'u'
+            || sentence[i] == 'U')
         {
-            cnt++;
+            ++cnt;
         }
     }
     return cnt;
 
 }
-
 
 int analyze_sentence(char* sentence, char* operation)
 {
@@ -108,35 +106,64 @@ int analyze_sentence(char* sentence, char* operation)
 return 0;
 }
 
-
 // Those functions are not ready, they can now the length of the shortest word
 // But we need not only the length, we also need the exact word,
 int letInWordCnt(char *word)
 {
     int cnt = 0;
-    while(*word++ != ' ')
+    while(word[cnt] != ' ' && word[cnt] != '\0')
     {
-        cnt++;
+        ++cnt;
     }
     return cnt;
 }
+
 void findShortest(char *sentence, char *word)
 {
-    int min = MAX_STRING_LEN, cntL;
+    int min = MAX_STRING_LEN, word_len;
     int i = 0;
 
     while (sentence[i] != '\0')
     {
-        cntL = letInWordCnt(sentence);
-        if(min > cntL)
+        word_len = letInWordCnt(&sentence[i]);
+        if (word_len < min)
         {
-            min = cntL;
-            string_copy(word, min, sentence[i]);
+            min = word_len;
+            if (string_copy(word, min, &sentence[i]))
+            {
+                printf("failed to copy string\n");
+                exit(1);
+            }
+            word[min] = '\0'; // end of word has to be null
         }
-        sentence += spaceCnt(sentence);
-        i++;
+        i += word_len; // jump to end of word
+        i += spaceCnt(sentence); // jump to end of spaces
+        i += 1; // jump to start of new word (1 after end of spaces)
     }
+}
 
+void findLongest(char *sentence, char *word)
+{
+    int max = 0, word_len;
+    int i = 0;
+
+    while (sentence[i] != '\0')
+    {
+        word_len = letInWordCnt(&sentence[i]);
+        if (word_len > max)
+        {
+            max = word_len;
+            if (string_copy(word, max, &sentence[i]))
+            {
+                printf("failed to copy string\n");
+                exit(1);
+            }
+            word[max] = '\0';
+        }
+        i += word_len; // jump to end of word
+        i += spaceCnt(sentence); // jump to end of spaces
+        i += 1; // jump to start of new word (1 after end of spaces)
+    }
 }
 
 void get_word(char *sentence, char *word, bool shortest)
@@ -144,13 +171,10 @@ void get_word(char *sentence, char *word, bool shortest)
     if(shortest)
     {
         findShortest(sentence, word);
+    } else {
+        findLongest(sentence, word);
     }
-
-
 }
-
-
-
 
 int main()
 {
