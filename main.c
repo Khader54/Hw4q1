@@ -16,6 +16,7 @@ bool read_line(char *line, int length)
         }
         if(line[i] == '\n')
         {
+            line[i] = '\0';
             return true;
         }
         i++;
@@ -59,7 +60,7 @@ int spaceCnt(char* sentence)
 
 int wordsCnt(char* sentence)
 {
-    int  cnt = *sentence != ' ';
+    int  cnt = *sentence != ' ' && *sentence != '\0';
 
     while (*sentence++ != '\0')
     {
