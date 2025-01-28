@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -130,6 +131,7 @@ void findShortest(char *sentence, char *word)
 
     while (sentence[i] != '\0')
     {
+        i += spaceCnt(&sentence[i]); // jump to end of spaces
         word_len = letInWordCnt(&sentence[i]);
         if (word_len < min)
         {
@@ -142,8 +144,7 @@ void findShortest(char *sentence, char *word)
             word[min] = '\0'; // end of word has to be null
         }
         i += word_len; // jump to end of word
-        i += spaceCnt(sentence); // jump to end of spaces
-        i += 1; // jump to start of new word (1 after end of spaces)
+
     }
 }
 
@@ -170,8 +171,7 @@ void findLongest(char *sentence, char *word)
             word[max] = '\0';
         }
         i += word_len; // jump to end of word
-        i += spaceCnt(sentence); // jump to end of spaces
-        i += 1; // jump to start of new word (1 after end of spaces)
+        i += spaceCnt(&sentence[i]); // jump to end of spaces
     }
 }
 
@@ -201,8 +201,9 @@ int main()
     printf(" is %d.\nIt has %d words and %d vowels.\n"
         , line_length, num_words, num_vowels);
     char longest_word[MAX_STRING_LEN], shortest_word[MAX_STRING_LEN];
-    get_word(line, shortest_word, true);
     get_word(line, longest_word, false);
+    get_word(line, shortest_word, true);
+
     printf("The longest word is \"%s\"\n", longest_word);
     printf("The shortest word is \"%s\"\n", shortest_word);
 }
