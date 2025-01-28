@@ -124,6 +124,8 @@ void findShortest(char *sentence, char *word)
     int min = MAX_STRING_LEN, word_len;
     int i = 0;
 
+    word[0] = '\0';
+
     while (sentence[i] != '\0')
     {
         word_len = letInWordCnt(&sentence[i]);
@@ -147,6 +149,10 @@ void findLongest(char *sentence, char *word)
 {
     int max = 0, word_len;
     int i = 0;
+
+    word[0] = '\0';
+
+
 
     while (sentence[i] != '\0')
     {
