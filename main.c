@@ -50,7 +50,7 @@ int letCnt(char* sentence)
 int spaceCnt(char* sentence)
 {
     int cnt = 0;
-    while(*sentence++ == ' ')// b
+    while(*(sentence++) == ' ')// b
     {
         cnt++;
     }
@@ -111,38 +111,40 @@ return 0;
 
 // Those functions are not ready, they can now the length of the shortest word
 // But we need not only the length, we also need the exact word,
-int letInWordCnt(char *sentence)
+int letInWordCnt(char *word)
 {
     int cnt = 0;
-    while(*sentence++ != ' ')
+    while(*word++ != ' ')
     {
         cnt++;
     }
+    return cnt;
 }
-int findShortest(char *sentence, char *word)
+void findShortest(char *sentence, char *word)
 {
     int min = MAX_STRING_LEN, cntL;
+    int i = 0;
 
-    while (*sentence++ != '\n')
+    while (sentence[i] != '\0')
     {
         cntL = letInWordCnt(sentence);
         if(min > cntL)
         {
             min = cntL;
+            string_copy(word, min, sentence[i]);
         }
         sentence += spaceCnt(sentence);
+        i++;
     }
 
-    return min;
 }
+
 void get_word(char *sentence, char *word, bool shortest)
 {
     if(shortest)
     {
-
+        findShortest(sentence, word);
     }
-
-
 
 
 }
@@ -165,4 +167,9 @@ int main()
     printf("The length of the sentence \"%s\"", line);
     printf(" is %d.\nIt has %d words and %d vowels.\n"
         , line_length, num_words, num_vowels);
+    char longest_word[MAX_STRING_LEN], shortest_word[MAX_STRING_LEN];
+    get_word(line, shortest_word, true);
+    get_word(line, longest_word, false);
+    printf("The longest word is \"%s\"\n", longest_word);
+    printf("The shortest word is \"%s\"\n", shortest_word);
 }
